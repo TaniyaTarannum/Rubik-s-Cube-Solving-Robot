@@ -157,3 +157,17 @@ In the above table, face LED/Face Output symbolised the enable signal for the mo
 
 ## Conclusion
 The project’s primary goal, which was to understand and implement a RISC-V processor[1] on FPGA, has been achieved successfully. In addition, a Rubik’s Cube solving robot was successfully controlled by the processor, which also generated the actuating commands for the Robot. This project not only proves the future applications and scalability of RISC-based processors because of their customizability but also proves the ease of use since RISC provides the possibility of soft-core processors. This is facilitated by RISC-V, which is a Reduced ISA and is open-source for further development and research. 
+
+### Team Members
+[Yashvardhan Saini](https://github.com/Dark-Hearted-Jaguar)
+### References  
+[Potato Processor](https://github.com/skordal/potato)  
+[RISC-V Instruction Set Manual](https://github.com/magicpan-risc-v/doc/blob/master/riscv-spec-v2.2.pdf)  
+[NEMA 17 Stepper Motor](https://robu.in/wp%20content/uploads/2023/08/1551708.pdf)  
+[Stepper Motor Driver](https://robu.in/wp-content/uploads/2017/12/Stepper%20Motor-Driver-DRV8825-Connections.pdf)  
+[Rubik's Cube Solution Guide](https://cdn.prod.website-files.com/65849828bf90a121b81dc3a5/65afea09c4f7a02afbb9d876_Rubiks_SolutionGuide_3x3-Original.pdf)
+[Solid Works](https://www.solidworks.com/sw/support/downloads.htm)  
+[Wishbone](https://cdn.opencores.org/downloads/wbspec_b3.pdf)  
+[UART](https://www.analog.com/en/resources/analog-dialogue/articles/uart-a-hardware-communication-protocol.html)  
+[Bootloader](https://embeddedinventor.com/embedded-bootloader-and-booting-process-explained/)  
+[Vivado](https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vivado.html)
