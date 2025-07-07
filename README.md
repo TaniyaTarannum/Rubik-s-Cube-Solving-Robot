@@ -1,4 +1,4 @@
-# Rubik-s-Cube-Solving-Robot
+# Rubik's Cube Solving Robot Utilizing RISC-V Architecture on FPGA   
 # Introduction
 RISC (Reduced Instruction Set Computer) is a computer ISA on the rise in today’s computer design. It provides multiple benefits over the conventional CISC (Complex Instruction Set Computer), the major ones being customisability and pipelining (which is possible due to the execution of different instructions being similar to each other). This project uses the ZedBoard FPGA(Field-Programmable Gate Array), on which the Potato Processor is implemented and used by programming it using Assembly Language (compatible with the RV32I ISA). The project’s final deliverable is a Rubik’s Cube Solving Robot, which is also designed & manufactured under this project and controlled by The Potato Processor (implemented on ZedBoard). Potato Processor, an open-source RISC-V processor by Kristian Klomsten Skordal.
 
