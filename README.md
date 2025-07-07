@@ -66,77 +66,66 @@ The wishbone protocol/bus is an open-source protocol that specifies rules for a 
 The system is designed to fit on a single chip, which is defined in the toplevel file. This file instantiates all the major modules, including the ones explained above – reset controller, clock generator, processor core, one GPIO Module (GPIO-0), two UART Modules (UART-0, UART-1), two memory modules (main memory – 128kB, AEE RAM – 16kB), AEE ROM – 16kB.   
 The memory layout is customisable and currently is as follows:  
 | Starting Address | Memory Element |
+|--|--|
 | 0x00000000 | Main memory (128 kB) |
 | 0xC0002000 | UART0 | 
 | 0xC0003000 | UART0 | 
 | 0xC0004000 | GPIO0 |
 | 0xFFFF8000 | Application execution environment ROM (16 kB) |
-| 0xFFFFC000 | Application execution environment RAM (16 kB) |  
+| 0xFFFFC000 | Application execution environment RAM (16 kB) |    
+
 Memory mapping is used by the address decoder, which is the main functional part of the toplevel file. The address decoder takes the address from the processor core and, on that basis, decides which of the peripherals is to be selected. The address decoder needs to be updated if the memory layout is to be changed. 
 
 ## Functioning of SoC  
 The functioning of SoC comes from the definition of the entities as explained above; all the toplevel file does is instantiate these entities and define the interconnections between them over the Wishbone interface.  
-![image](https://github.com/user-attachments/assets/c01d3564-4718-4916-bf65-844831eba6fe)  
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c01d3564-4718-4916-bf65-844831eba6fe">
+</p>
+<p align="center">Toplevel Diagram of Potato Processor SoC</p>   
+
 # CFOP Algorithm
 The program to solve the Rubik's Cube is written in C++ and is based on the CFOP algorithm, which defines a series of moves based on the face patterns of the cube. The algorithm involves rotating the six faces of the cube either in a clockwise or an anticlockwise direction. In our code, for a face centered with, say, yellow, Y0 and Y1 are used to represent clockwise and anticlockwise rotations of the yellow-centered face, respectively.  
-![image](https://github.com/user-attachments/assets/1be01b42-d005-41dd-8a1d-54243953b724)  
-The cube's initial configuration is provided in the form of a 2D array of size 6×9, where each row represents one face of the cube. The rows are ordered to store data in the following sequence of faces: White, Green, Orange, Blue, Red, and Yellow. This matrix is updated after each move, based on the algorithm, until the cube is fully solved.
-Wishbone Module[2][9] 
-The wishbone protocol/bus is an open-source protocol that 
-specifies rules for a logic bus (not the electrical information or 
-bus topology), especially designed for communication between 
-different modules/entities on a single chip[YVS2.3]. The Potato 
-Processor also uses a wishbone interface to establish 
-communication between modules inside the SoC.  
-System on Chip (SoC)[2] 
-The system is designed to fit on a single chip, which is defined 
-in the toplevel file. This file instantiates all the major modules, 
-including the ones explained above – reset controller, clock 
-generator, processor core, one GPIO Module (GPIO-0), two 
-UART Modules (UART-0, UART-1), two memory modules 
-(main memory – 128kB, AEE RAM – 16kB), AEE ROM – 
-16kB. 
-Memory mapping is used by the address decoder, which is the 
-main functional part of the toplevel file. The address decoder 
-takes the address from the processor core and, on that basis, 
-decides which of the peripherals is to be selected. The address 
-decoder needs to be updated if the memory layout is to be 
-changed. 
-Functioning of SoC[2] 
-The functioning of SoC comes from the definition of the 
-entities as explained above; all the toplevel file does is 
-instantiate these entities and define the interconnections 
-between them over the Wishbone interface. 
-### Understanding the CFOP Algorithm
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/1be01b42-d005-41dd-8a1d-54243953b724" width="500">
+</p>
+<p align="center">Numbering scheme for Rubik's cube</p>   
+
+The cube's initial configuration is provided in the form of a 2D array of size 6×9, where each row represents one face of the cube. The rows are ordered to store data in the following sequence of faces: White, Green, Orange, Blue, Red, and Yellow. This matrix is updated after each move, based on the algorithm, until the cube is fully solved. 
+
+### Understanding the CFOP Algorithm  
 This algorithm follows the following steps: CFOP stands for Cross, First Two Layers (F2L), Orientation of Last Layer (OLL), and Permutation of Last Layer (PLL).
-Firstly, a cross is formed. In our program, the face with the white center is chosen as the first layer. Using if-else statements and swap functions, this step is executed and is referred to as the Cross. Secondly, the program proceeds to the next step, F2L, in two parts. It first completes the white face and then the second layer by performing simple rotations of the cube's faces in clockwise (CW) or anticlockwise (ACW) directions. Next, the program advances to OLL, solving the yellow face by first forming a yellow cross and then completing the entire layer. Finally, it moves to the last step, PLL, where at least two yellow corners are positioned correctly, and then the rest of the cube is solved by following the fixed steps of the algorithm.
-## Robot's Configuration
-Nema-17 stepper motors[6] and DRV8825 Stepper Motor Driver Modules[5] have been used in the project to actuate the rotation of Rubik’s Cube’s faces. The precise open-loop control of stepper motors was the reason for choosing 
-them for this project since they can provide exact turns of 90º without any closed-loop control (use of sensors).   
+Firstly, a cross is formed. In our program, the face with the white center is chosen as the first layer. Using if-else statements and swap functions, this step is executed and is referred to as the Cross. Secondly, the program proceeds to the next step, F2L, in two parts. It first completes the white face and then the second layer by performing simple rotations of the cube's faces in clockwise (CW) or anticlockwise (ACW) directions. Next, the program advances to OLL, solving the yellow face by first forming a yellow cross and then completing the entire layer. Finally, it moves to the last step, PLL, where at least two yellow corners are positioned correctly, and then the rest of the cube is solved by following the fixed steps of the algorithm.  
+
+## Robot's Configuration  
+Nema-17 stepper motors[6] and DRV8825 Stepper Motor Driver Modules[5] have been used in the project to actuate the rotation of Rubik’s Cube’s faces. The precise open-loop control of stepper motors was the reason for choosing them for this project since they can provide exact turns of 90º without any closed-loop control (use of sensors).   
 The figure below shows a typical connection schematic for DRV8825 Stepper Motor Driver Modules.  
-![image](https://github.com/user-attachments/assets/df079555-1ca6-44d1-87c6-4c88bb9c7eec)  
-The robot uses 6 stepper motors, one for each of the 6 faces. Each stepper motor has a dedicated motor driver. The 6 motor drivers share the same power supply lines (VMOT, GND), the same control lines (STEP, DIR) and the same low voltage supply (RESET, SUPPLY – which are at Vcc provided by the PMOD connector on ZedBoard and GND – which is connected to GND provided by the PMOD connector on ZedBoard). The 6 enable signals originating from the ZedBoard are connected to each of the 6 motor drivers, which enables a 
-single motor driver at a time, thus rotating the corresponding face; this scheme also helps in reducing the current consumption of the robot by 83% (as compared to all the motors being active all the time with different step inputs). The controlling circuit has been assembled on a breadboard; the schematic in Figure 11 better explains the connections.   
-![image](https://github.com/user-attachments/assets/b4fad52f-cf89-480b-a949-7029dd7683c4)  
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/df079555-1ca6-44d1-87c6-4c88bb9c7eec" width="500">
+</p>
+<p align="center">Typical Connection Schematic for DRV8825</p>   
+
+The robot uses 6 stepper motors, one for each of the 6 faces. Each stepper motor has a dedicated motor driver. The 6 motor drivers share the same power supply lines (VMOT, GND), the same control lines (STEP, DIR) and the same low voltage supply (RESET, SUPPLY – which are at Vcc provided by the PMOD connector on ZedBoard and GND – which is connected to GND provided by the PMOD connector on ZedBoard). The 6 enable signals originating from the ZedBoard are connected to each of the 6 motor drivers, which enables a single motor driver at a time, thus rotating the corresponding face; this scheme also helps in reducing the current consumption of the robot by 83% (as compared to all the motors being active all the time with different step inputs). The controlling circuit has been assembled on a breadboard; the schematic in Figure 11 better explains the connections.   
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b4fad52f-cf89-480b-a949-7029dd7683c4" width="500">
+</p>
+<p align="center">Controller Schematic for Robot</p>   
 All 6 stepper motors are mounted on a 3D-printed PLA structure, which holds the Rubik's Cube along with these stepper motors. This structure has been designed using Solidworks Software[8], and its CAD can be seen in the figure below: 
-![image](https://github.com/user-attachments/assets/88e2d653-bbeb-4159-a19c-98d8873bd480)  
-## Simulation
-After the SoC file has been created, it is implemented on the ZedBoard. For implementation, timing constraints need to be met, which was done by designing a custom clock generator. The next step is defining constraints in the ZedBoard for inputs and outputs, which requires deciding what outputs and inputs are needed to operate the Cube Solving Robot.   
-To control the robot, we need to control 6 Stepper Motors (NEMA-17 motors) controlled by DRV8825 modules. The 6-stepper motors will have a dedicated motor driver for each of them, to select which motor to be rotated, an Active Low Enable signal will be sent to the required motor driver – 
-so, this requires 6 bits of digital output data; next, a single bit 
-of output is required to determine the direction of rotation of 
-the motor; another bit to generate the pulses to rotate Stepper 
-Motors. Hence, a total of 8 bits of output is required, with the 
-following layout:
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/88e2d653-bbeb-4159-a19c-98d8873bd480" width="500">
+</p>
+<p align="center">CAD for Robot Body in Solidworks</p>  
+
+## Simulation  
+After the SoC file has been created, it is implemented on the ZedBoard. For implementation, timing constraints need to be met, which was done by designing a custom clock generator. The next step is defining constraints in the ZedBoard for inputs and outputs, which requires deciding what outputs and inputs are needed to operate the Cube Solving Robot.   To control the robot, we need to control 6 Stepper Motors (NEMA-17 motors) controlled by DRV8825 modules. The 6-stepper motors will have a dedicated motor driver for each of them, to select which motor to be rotated, an Active Low Enable signal will be sent to the required motor driver – so, this requires 6 bits of digital output data; next, a single bit of output is required to determine the direction of rotation of the motor; another bit to generate the pulses to rotate Stepper Motors. Hence, a total of 8 bits of output is required, with the following layout:
 | Bits 7-2 | Bit 1 | Bit 0 |
-| Enable Motor (5,4,3,2,1,0) | Direction | Step Pulse |
-This will be achieved by using GPIOs. To give a visual indication to inform the user about the current move, the 8 LEDs on the ZedBoard will be used to show the current 8 Control Bits being sent to the robot. Thus, a total of 16 GPIOs (all configured as output) are being used.
-The GPIO outputs (other than LEDs) are taken from an On
-Board PMOD connector, which also provides Vcc (Pin 6 & 
-Pin12) and GND (Pin 5 & Pin 11) required for the stepper motor 
-drivers. 
-The processor also has a reset button, which also needs to be provided on the ZedBoard to reset the processor whenever needed. This is also achieved by defining constraints. The project does not currently require UART Modules; thus, their constraints have not been shown in this report.
-| Port  Function Constraint 
+|--|--|--|
+| Enable Motor (5,4,3,2,1,0) | Direction | Step Pulse |  
+
+This will be achieved by using GPIOs. To give a visual indication to inform the user about the current move, the 8 LEDs on the ZedBoard will be used to show the current 8 Control Bits being sent to the robot. Thus, a total of 16 GPIOs (all configured as output) are being used. The GPIO outputs (other than LEDs) are taken from an On
+Board PMOD connector, which also provides Vcc (Pin 6 & Pin12) and GND (Pin 5 & Pin 11) required for the stepper motor drivers. The processor also has a reset button, which also needs to be provided on the ZedBoard to reset the processor whenever needed. This is also achieved by defining constraints. The project does not currently require UART Modules; thus, their constraints have not been shown in this report.
+
+| Port | Function | Constraint | 
+|--|--|--|
 | gpio_pins[0] | Step Pulse LED | T22 (LED-0) |
 | gpio_pins[1] | Direction LED | T21 (LED-1) |
 | gpio_pins[2] | Yellow Face LED | U22 (LED-2) | 
@@ -153,10 +142,17 @@ The processor also has a reset button, which also needs to be provided on the Ze
 | gpio_pins[13] | Orange Face Output | AB10 (JA-8) | 
 | gpio_pins[14] | Green Face Output | AB9 (JA-9) |
 | gpio_pins[15] | White Face Output | AA8 (JA-10) |
-| reset_n | Reset the Button of SoC | P16 (Push Button BTNC) |  
-In the above table, face LED/Face Output symbolised the 
-enable signal for the motor driver of the corresponding face.  
-![image](https://github.com/user-attachments/assets/26ce9868-f27a-400a-b86c-b3a9d6585910)  
-![image](https://github.com/user-attachments/assets/cb8ace65-c7af-4d6d-abc8-17a8f4d6a1ef)
+| reset_n | Reset the Button of SoC | P16 (Push Button BTNC) |    
+
+In the above table, face LED/Face Output symbolised the enable signal for the motor driver of the corresponding face. 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/26ce9868-f27a-400a-b86c-b3a9d6585910" width="500">
+</p>
+<p align="center">Robot Controller Implemented using Breadboard</p>  
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/cb8ace65-c7af-4d6d-abc8-17a8f4d6a1ef" width="500">
+</p>
+<p align="center">The Robot - showing 3D-Printed Body, Stepper Motors and Rubik's Cube </p>  
+
 ## Conclusion
 The project’s primary goal, which was to understand and implement a RISC-V processor[1] on FPGA, has been achieved successfully. In addition, a Rubik’s Cube solving robot was successfully controlled by the processor, which also generated the actuating commands for the Robot. This project not only proves the future applications and scalability of RISC-based processors because of their customizability but also proves the ease of use since RISC provides the possibility of soft-core processors. This is facilitated by RISC-V, which is a Reduced ISA and is open-source for further development and research. 
