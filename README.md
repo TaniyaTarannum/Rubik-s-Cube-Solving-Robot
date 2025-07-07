@@ -65,6 +65,7 @@ The wishbone protocol/bus is an open-source protocol that specifies rules for a 
 ## System on Chip (SoC)  
 The system is designed to fit on a single chip, which is defined in the toplevel file. This file instantiates all the major modules, including the ones explained above – reset controller, clock generator, processor core, one GPIO Module (GPIO-0), two UART Modules (UART-0, UART-1), two memory modules (main memory – 128kB, AEE RAM – 16kB), AEE ROM – 16kB.   
 The memory layout is customisable and currently is as follows:  
+
 | Starting Address | Memory Element |
 |--|--|
 | 0x00000000 | Main memory (128 kB) |
