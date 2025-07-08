@@ -1,0 +1,58 @@
+-- BootLoader Program
+-- Inside Main Memory
+-- BootLoader begins at address: 0xBF000000
+
+-- R31 has the BootLoader begin address: 0xBF000000
+-- R30 has address of UART1: 0xC0003000
+-- 0x00 UART transmit register
+-- 0x04 UART receive register
+-- 0x08 UART status register
+-- 0x0C UART sample clk divisor (Value of Sample Clk Divisor is in R29)
+-- 0x10 UART interrupt enable register (enabled when set): bit 0 is to enable receive buffer, bit 1 is to enable transmit buffer (Configuration of Interrupt Enable Register is in R28)
+-- R27 has the data received over UART1
+-- R26 counts 8 times (8*4=32, each UART packet carries 4 bits of data)
+-- R25 counts the number of instructions (size of program loaded at a point of time)
+-- R24 is used to hold the content of status register
+-- R23 is used to hold 0x004 (to check receive buffer - bit 2 of status register)
+-- R22 stores (R23 AND R24) to check if data packet is received or not.
+-- R21 used as a pointer to store the address of instruction memory (where bootloader will load the program)
+-- R20 stores 0xF0000000 as a mask to keep the data bits
+-- R19 is the content register that updates the memory at the pointer address
+-- R18 has the final address (size of the program to be bootloaded)
+
+Address		Mnemonic			Comment
+
+0xBEFFFFFC	#SIZE OF THE PROGRAM		Not an instruction (Size of the program to be bootloaded)
+0xBF000000	ADDI R31, R0, 0x0BF		R31 = 0x000000BF
+0xBF000004	SLLI R31, R31, 0x018		Storing the bootloader start address in R31: R31<<24 = 0xBF000000
+0xBF000008	ADDI R30, R0, 0x0C0		R30 = 0x000000C0
+0xBF00000C	SLLI R30, R30, 0x010		R30<<16 = 0x00C00000
+0xBF000010	ADDI R30, R30, 0x030		R30 = 0x00C00030
+0xBF000014	SLLI R30, R30, 0x008		Storing the UART1 Address in R31: R30<<8 = 0xC0003000
+0xBF000018	ADDI R29, R0, 0x006		Storing value of Sample Clk Divisor in R29
+0xBF00001C	ADDI R28, R28, 0x001		Storing configuration of Interrupt Enable Register is R28
+0xBF000020	SW R29, 0x00C(R30)		Configuring UART1 Sample Clk Divisor Register
+0xBF000024	SW R28, 0x010(R30)		Configuring UART1 Interrupt Enable Register
+0xBF000028	ADDI R23, R0, 0x004		R23 = 0x004 (to check receive buffer full - bit 2 of status register)
+0xBF00002C	ADDI R21, R0, 0x000		Initialising Pointer to store program
+0xBF000030	ADDI R20, R0, 0x00F		Mask to keep the data bits in UART1 receive packet
+0xBF000034	SLLI R20, R20, 0x01C		Mask to keep the data bits in UART1 receive packet
+0xBF000038	LW R18, 0xFFC(R31)		Storing the size of the program to be bootloaded in R18
+
+0xBF000040	ADDI R19, R0, 0x000		Initialising Content Register
+0xBF000044	ADDI R26, R0, 0x008		Initialise mod-8 counter
+0xBF000048	LW R24, 0x008(R30)		Reading the UART1 Status Register
+0xBF00004C	AND R22, R23, R24		R22 = R23 AND R24 (to check the receive buffer full - bit 2 of status register)
+0xBF000050	BEQ R22, R0, 0xFF8		Loop until data is received (receive buffer full bit of status register is set)
+0xBF000054	LW R27, 0x004(R30)		Reading data from UART1 Receive Register
+0xBF000058	SLLI R27, R27, 0x019		Making the data bits of the UART packet as MSBs R19<<25
+0xBF00005C	AND R27, R27, R20		Using the data mask to retain only the data bits
+0xBF000060	ADD R19, R19, R27		Adding the received data to content register
+0xBF000064	SRLI R19, R19, 0x004		Shifting content register right by 4 bits to vacant space for next nibble of data bits R19>>4
+0xBF000068	ADDI R26, R26, 0xFFF		Mod-8 Counter
+0xBF00006C	BNE R26, R0, 0xFDC		Looping to read next data packets
+0xBF000070	SW R19, 0x000(R30)		Storing data at the pointer address
+0xBF000074	ADDI R21, R21, 0x004		Incrementing pointer
+0xBF000078	BNE R21, R18, 0xFC8		Reading next instruction until the program is finished
+
+0xBF00007C	JALR, R0, R0, 0x000		Bootloading finished, start the program.

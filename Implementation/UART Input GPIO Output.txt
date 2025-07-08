@@ -1,0 +1,47 @@
+-- UART1 Receive Controls GPIO LEDs
+-- R6 holds the data from UART
+-- UART1 Address: 0xC0003000
+-- R1 has address of UART1
+-- 0x00 transmit register
+-- 0x04 receive register
+-- 0x08 status register
+-- 0x0c sample clk divisor
+-- 0x10 interrupt enable register
+-- GPIO Address: 0XC0004000
+--! | 0x00    | Input values, one bit per pin (read-only)                     |
+--! | 0x04    | Output values, one bit per pin (read/write)                   |
+--! | 0x08    | Direction register, one bit per pin. 0 is input, 1 is output. |
+
+
+0x00000000				LW R1, R0, 0x030				R1 has address of UART1
+0x00000004				ADDI R2, R0, 0x006				R2 has value of Sample_Clk_Divisor
+0x00000008				ADDI R3, R0, 0x001				R3 has configuration of interrupt enable register
+0x0000000C				SW R2, 0x0C(R1)					Storing data in Sample Clk Divisor Register
+0x00000010				SW R3, 0x10(R1)					Configuring Interrupt Enable Register
+0x00000014				LW R6, 0x04(R1)					Loading data from receive Register
+0X00000018				LW R4, 0x34(R0)					R4 has address of GPIO
+0X0000001C				ADDI R5, R0, 0x0FF				R5 has configuration of GPIO direction register
+0X00000020				SW R5, 0x08(R4)					Configuring direction register
+0X00000024				LW R6, 0x04(R1)					Reading data from UART1
+0X00000028				SW R6, 0x04(R4)					Writing GPIO Outputs
+0X0000002C				BEQ R0, R0, -8					Looping infinitely
+0X00000030				0xC0003000					UART1 Address Not an instruction
+0X00000034				0xC0004000					GPIO Address Not an instruction
+
+
+
+
+03002083
+00600113
+00100193
+0020a623
+0030a823
+0040a303
+03402203
+0ff00293
+00522423
+0040a303
+00622223
+fe000ce3
+c0003000
+c0004000
