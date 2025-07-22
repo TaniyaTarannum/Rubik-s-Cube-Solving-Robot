@@ -1,19 +1,19 @@
 -- Pulse Program
--- R1 has the move condiguration
--- R6 has the configuration of GPIO Direction Register
+-- R1 has the move configuration
+-- R6 has the configuration of the GPIO Direction Register
 
 
-Address		MachineCode		Mnemonic		Comment
-0x00000000	00100113  		ADDI R2, R0, 0x001	(R2=0x00000001 : To invert the pulse bit)
-0x00000004	01C02183		LW R3, R0, 0x01C	(R3=0xC0004004 : GPIO Output Register Address)
-0x00000008	02400213		ADDI R4, R0, 0x024	(R4=0x00000024 : Starting Address of Pulse Program)
-0x0000000C	02002283		LW R5, R0, 0x020	(R5=#start_addr : Starting Address of Main Program)
-0x00000010	0FF00313		ADDI R6, R0, 0x0FF	(Content to configure the GPIO Direction Register)
-0x00000014	00618223		SW R6, 0x004(R3)	(Configuring the GPIO Direction Register)
-0x00000018	00428067		JALR R0, R5, 0x004	(Jump to tha Main Program)
+Address		MachineCode		Mnemonic		            Comment
+0x00000000	00100113  	ADDI R2, R0, 0x001	    (R2=0x00000001 : To invert the pulse bit)
+0x00000004	01C02183		LW R3, R0, 0x01C	      (R3=0xC0004004 : GPIO Output Register Address)
+0x00000008	02400213		ADDI R4, R0, 0x024	    (R4=0x00000024 : Starting Address of Pulse Program)
+0x0000000C	02002283		LW R5, R0, 0x020	      (R5=#start_addr : Starting Address of Main Program)
+0x00000010	0FF00313		ADDI R6, R0, 0x0FF	    (Content to configure the GPIO Direction Register)
+0x00000014	00618223		SW R6, 0x004(R3)	      (Configuring the GPIO Direction Register)
+0x00000018	00428067		JALR R0, R5, 0x004	    (Jump to tha Main Program)
 
-0x0000001C	C0004004		Not an instruction	GPIO Output Register Address
-0x00000020	0000004C		Not an instruction	Start Address of Main Program
+0x0000001C	C0004004		Not an instruction	     GPIO Output Register Address
+0x00000020	0000004C		Not an instruction	     Start Address of Main Program
 
 //The program counter jumps to the second location in the memory [R5+0x004] 
 //points to the instruction 0002A083 which is LW R1, 0x000(R5); R1 = Mem[R5] 
@@ -22,25 +22,22 @@ Address		MachineCode		Mnemonic		Comment
 
 -- Pulse Program Begins
 
-Address		MachineCode		Mnemonic		Comment
+Address		MachineCode		Mnemonic		           Comment
 
-0x00000024	06500393		ADDI R7, R0, 0x065	(R7=0x00000065 : Initializing counter)
-0x00000028	0011A023		SW R1, 0x000(R3)	(Sending data to GPIO Output Register)
-0x0000002C	0020C0B3		XOR R1, R1, R2		(Flip the pulse bit)
-0x00000030	FFF38393		ADDI R7, R7, 0xFFF	(R7=R7-1)
-0x00000034	7FF00413		ADDI R8, R0, 0x7FF	(R8=0x000007FF)(2047 in D)
-0x00000038	00241413		SLLI R8, R8, 0x003	(R8=R8<<3)(16376 in D)
-0x0000003C	FFF40413		ADDI R8, R8, 0XFFF	(R8=R8-1)
-0x00000040	FE801EE3		BNE R0,R8, 0XFFC	(Slow down loop)
-0x00000044	FE7012E3		BNE R0, R7, 0xFE4	(If R7!=0 Loop the pulse)
-0x00000048	00428067		JALR R0, R5, 0x004	(Return and resume the main program)
+0x00000024	06500393		ADDI R7, R0, 0x065	   (R7=0x00000065 : Initializing counter)
+0x00000028	0011A023		SW R1, 0x000(R3)	     (Sending data to GPIO Output Register)
+0x0000002C	0020C0B3		XOR R1, R1, R2	     	 (Flip the pulse bit)
+0x00000030	FFF38393		ADDI R7, R7, 0xFFF	   (R7=R7-1)
+0x00000034	7FF00413		ADDI R8, R0, 0x7FF	   (R8=0x000007FF)(2047 in D)
+0x00000038	00241413		SLLI R8, R8, 0x003	   (R8=R8<<3)(16376 in D)
+0x0000003C	FFF40413		ADDI R8, R8, 0XFFF	   (R8=R8-1)
+0x00000040	FE801EE3		BNE R0,R8, 0XFFC	     (Slow down loop)
+0x00000044	FE7012E3		BNE R0, R7, 0xFE4	     (If R7!=0 Loop the pulse)
+0x00000048	00428067		JALR R0, R5, 0x004   	 (Return and resume the main program)
 
 -- Main Program Begins
 
 0x0000004C				Not an Instruction
-
-
-
 
 000000F4
 0002A083 //LW R1, 0x000(R5)
